@@ -136,7 +136,7 @@ object IO1:
   """.trim.stripMargin
 
   // import all the combinators that come from `Monad`
-  import IO.monad.* 
+  import IO.monad.*
 
   def factorial(n: Int): IO[Int] =
     for
@@ -192,6 +192,7 @@ object IO2a:
         case Return(a) => f(a).unsafeRun()
         case Suspend(r) => f(r()).unsafeRun()
         case FlatMap(y, g) => y.flatMap(a => g(a).flatMap(f)).unsafeRun()
+        // case FlatMap(y, g) => y.flatMap(g).flatMap(f).unsafeRun() // StackOverflowError
 
   object IO: // Notice that none of these operations DO anything
     def apply[A](a: => A): IO[A] =
@@ -659,7 +660,7 @@ object IO4:
     }
 
   extension [A](fa: Free[[x] =>> Files[x] | Console[x], A])
-    def toThunk: () => A = 
+    def toThunk: () => A =
       fa.runFree([x] => (fx: Files[x] | Console[x]) => fx match
         case c: Console[x] => c.toThunk
         case f: Files[x] => f.toThunk
@@ -718,7 +719,7 @@ object IO5:
       def writeLines(file: String, lines: List[String]) = () => ()
 
   def cat[F[_]](file: String)(using c: Console[F], f: Files[F], m: Monad[F]): F[Unit] =
-    f.readLines(file).flatMap { lines => 
+    f.readLines(file).flatMap { lines =>
       c.printLn(lines.mkString("\n"))
     }
 
