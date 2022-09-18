@@ -10,5 +10,20 @@ project.vim
 .project
 .classpath
 .metadata/
+
+# bloop and metals
+.bloop
 .bsp
+
+# sbt
+project/project/
+project/target/
+target/
+
+# metals
+project/metals.sbt
 .metals
+
+# vs code
+.vscode
+
